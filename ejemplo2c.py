@@ -41,7 +41,7 @@ random.seed(RANDOM_SEED)
 interval = 5 # cada 10 segundos ...
 
 # crear los carros
-for i in range(25):
+for i in range(5):
     t = random.expovariate(1.0 / interval)
     tcarga = random.randint(1,5)
     env.process(car(env, 'Car %d' % i, bcs, t, tcarga))
