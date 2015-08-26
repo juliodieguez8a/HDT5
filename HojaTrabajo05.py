@@ -12,7 +12,7 @@ import random
 # charge_duration: tiempo que toma cargar la bateria
 
 def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
-
+    global lista
     global tiempoTOTAL #variable con el tiempo TOTAL acumulado de los procesos
     
     #NEW
@@ -77,7 +77,7 @@ def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
     tiempoTOTAL += (env.now - tiempoLlegada)  
 
 
-
+lista=[]
 memoria_ram=100 #100 unidades de memoria ram
 ins_x_t = 3.0 #ejecuta 3 instrucciones por unidad de tiempo
 tiempoTOTAL = 0.0 #tiempo de todos los procesos
@@ -105,5 +105,12 @@ for i in range(n_procesos):
 # correr la simulacion
 env.run()
 print "El PROMEDIO de tiempo por proceso es ", tiempoTOTAL / n_procesos
-print "fin"
+
+#Calculo de desviacion standar
+temp=0
+for i in lista:
+    temp+=(i-promedio)**2
+
+des=(temp/n_procesos)**0.5
+print "La desviacion estandar es: ", des
 
