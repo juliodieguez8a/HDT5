@@ -74,14 +74,15 @@ def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
 
     #Actualizar tiempo Total
     # Se agraga al tiempo total el tiempo de este proceso (tiempo actual - tiempo de llegada)
+    lista.append(env.now - tiempoLlegada)
     tiempoTOTAL += (env.now - tiempoLlegada)  
 
 
 lista=[]
-memoria_ram=100 #100 unidades de memoria ram
-ins_x_t = 3.0 #ejecuta 3 instrucciones por unidad de tiempo
+memoria_ram= 100 #100 unidades de memoria ram
+ins_x_t = 6.0 #ejecuta 3 instrucciones por unidad de tiempo
 tiempoTOTAL = 0.0 #tiempo de todos los procesos
-n_procesos = 25 # numero de procesos a ejecutar
+n_procesos = 200 # numero de procesos a ejecutar
 
 
 env = simpy.Environment()  #crear ambiente de simulacion
@@ -92,7 +93,7 @@ waiting = simpy.Resource (env, capacity=1) #cola para acceso a operaciones i/o
 # Crear Semilla para random
 random.seed(1234)
 
-interval = 10 #cada 10
+interval = 1 #cada 10
 
 
 # crear los procesos
@@ -104,7 +105,8 @@ for i in range(n_procesos):
 
 # correr la simulacion
 env.run()
-print "El PROMEDIO de tiempo por proceso es ", tiempoTOTAL / n_procesos
+promedio =(tiempoTOTAL / n_procesos)
+print "El PROMEDIO de tiempo por proceso es ", promedio
 
 #Calculo de desviacion standar
 temp=0
@@ -113,4 +115,4 @@ for i in lista:
 
 des=(temp/n_procesos)**0.5
 print "La desviacion estandar es: ", des
-
+print "fin"
