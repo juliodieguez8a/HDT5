@@ -1,18 +1,16 @@
+# -*- coding: cp1252 -*-
+
+#UVG – Algoritmos y Estructura de Datos, Seccion 10
+#Pedro Joaquin Castillo Coronado 14224
+#Julio Ronaldo Dieguez Ochoa Carne 14475
+
 import simpy
 import random
 
-#
-# el carro se conduce un tiempo y tiene que llegar a cargarse de energia
-# luego puede continuar conduciendo
-# Debe hacer cola (FIFO) en el cargador
 
-# name: identificacion del carro
-# bcs:  cargador de bateria
-# driving_time: tiempo que conduce antes de necesitar carga
-# charge_duration: tiempo que toma cargar la bateria
 
 def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
-
+    global lista
     global tiempoTOTAL #variable con el tiempo TOTAL acumulado de los procesos
     
     #NEW
@@ -38,8 +36,8 @@ def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
         with cpu.request() as req:
             yield req
             #Determinar instrucciones a realizar
-            if (ins-completado)>=3:
-                eje=3
+            if (ins-completado)>=ins_x_t:
+                eje=ins_x_t
             else:
                 eje=(ins-completado)
 
@@ -74,14 +72,15 @@ def proceso(env, t_crea, nombre, ram, mem, ins, ins_x_t):
 
     #Actualizar tiempo Total
     # Se agraga al tiempo total el tiempo de este proceso (tiempo actual - tiempo de llegada)
+    lista.append(env.now - tiempoLlegada)
     tiempoTOTAL += (env.now - tiempoLlegada)  
 
 
-
-memoria_ram=100 #100 unidades de memoria ram
+lista=[] #lista en la que se guardan los tiempos de cada proceso
+memoria_ram= 100 #100 unidades de memoria ram
 ins_x_t = 3.0 #ejecuta 3 instrucciones por unidad de tiempo
 tiempoTOTAL = 0.0 #tiempo de todos los procesos
-n_procesos = 25 # numero de procesos a ejecutar
+n_procesos = 100 # numero de procesos a ejecutar
 
 
 env = simpy.Environment()  #crear ambiente de simulacion
@@ -104,6 +103,14 @@ for i in range(n_procesos):
 
 # correr la simulacion
 env.run()
-print "El PROMEDIO de tiempo por proceso es ", tiempoTOTAL / n_procesos
-print "fin"
+promedio =(tiempoTOTAL / n_procesos)
+print "El PROMEDIO de tiempo por proceso es ", promedio
 
+#Calculo de desviacion standar
+temp=0
+for i in lista:
+    temp+=(i-promedio)**2
+
+des=(temp/n_procesos)**0.5
+print "La desviacion estandar es: ", des
+print "fin"
